@@ -1,6 +1,7 @@
 import { useState } from "react";
 import CategoriesList from "./CategoriesList"
 import GifsExpo from "../GifsExpo";
+import Swal from "sweetalert2"
 
 const Categories = ({categories = [], setCategories}) => {
     const [inputValue, setInputValue] =useState("")
@@ -17,6 +18,22 @@ const Categories = ({categories = [], setCategories}) => {
         }
     }
 
+    const clearList = async () =>{
+        const result = await Swal.fire({
+            title:"Clear the List?",
+            text:"You won't be able to revert this!",
+            icon:"warning",
+            showCancelButton:true,
+            confirmButtonText:"Yes, clear it!",
+        });
+
+        if(result.isConfirmed){
+            localStorage.setItem("categories", JSON.stringify([]))
+            setCategories([]);
+        }
+    }
+
+
     return (
         <>
         <input
@@ -31,13 +48,25 @@ const Categories = ({categories = [], setCategories}) => {
       type="button"
       >
         Add
-      </button>
-      <br />
-      <CategoriesList 
-       categories={categories} 
-       setCategories={setCategories}/>
-       <hr />
-       <GifsExpo categories={categories} />
+        </button>
+        <button
+        className="btn btn-danger btn-sm ms-2 mb-1"
+        onClick={clearList}
+        type="button"
+        >
+        Eliminar
+        </button>
+        
+        <br />
+        <CategoriesList 
+        categories={categories} 
+        setCategories={setCategories}/>
+        <hr />
+        <GifsExpo categories={categories}/>
+        <br />
+        {
+        categories.length === 0 && (<h4>Add a category...</h4>)
+        }
       </>
     )
 }
